@@ -1,0 +1,65 @@
+// ==UserScript==
+// @name         评教脚本
+// @namespace    https://bbs.tampermonkey.net.cn/
+// @version      0.1.0
+// @description  try to take over the world!
+// @author       You
+// @match        https://100.fosu.edu.cn/xspj/xspj_edit.do?*
+// @match        https://100.fosu.edu.cn/xspj/xspj_list.do?*
+// @match        https://100.fosu.edu.cn/xspj/xspj_find.do*
+// ==/UserScript==
+
+window.onload = (function() {
+    'use strict';
+    // 标记是否找到链接
+    var found = false;
+
+    // 封装一个函数来检查并点击包含特定文本的链接
+    function checkAndClickLinkByText(textContent) {
+        var links = Array.from(document.getElementsByTagName('a'));
+        var targetLinks = links.filter(function(link) {
+            return link.textContent.trim() === textContent;
+        });
+
+        if (targetLinks.length > 0) {
+            targetLinks[0].click();
+            found = true;
+            return;
+        }
+    }
+
+    // 检查并点击包含“进入评价”的链接
+    checkAndClickLinkByText('进入评价');
+
+    // 如果没有找到“进入评价”，检查并点击只有“评价”两个字的链接
+    if (!found) {
+        checkAndClickLinkByText('评价');
+    }
+
+       // 如果仍然没有找到，尝试点击“下一页”
+    if (!found) {
+        var nextPageButton = document.getElementById('PagingControl1_btnNextPage');
+        if (nextPageButton) {
+            nextPageButton.click();
+        } else {
+            console.error('没有找到ID为 "PagingControl1_btnNextPage" 的“下一页”按钮');
+        }
+    }
+
+    // 特定ID的点击操作，仅当元素存在时执行
+    var idsToClick = [
+        "pj0601id_8_1", "pj0601id_7_1", "pj0601id_6_1", "pj0601id_5_1",
+        "pj0601id_4_1", "pj0601id_3_1", "pj0601id_2_1", "pj0601id_1_2", "tj"
+    ];
+
+    idsToClick.forEach(function(id) {
+        var element = document.getElementById(id);
+        if (element) {
+            element.click(); // 如果元素存在，模拟点击
+        } else {
+            console.error('没有找到ID为 ' + id + ' 的元素');
+        }
+    });
+
+    // Your code here...
+})();
